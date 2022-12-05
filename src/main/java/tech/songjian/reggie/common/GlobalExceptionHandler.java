@@ -46,5 +46,20 @@ public class GlobalExceptionHandler {
         }
         return R.error("未知错误");
     }
+    
+    /**
+     * @title exceptionHandler
+     * @author SongJian 
+     * @param: ex
+     * @updateTime 2022/12/5 19:34 
+     * @return: tech.songjian.reggie.common.R<java.lang.String>
+     * @throws
+     * @description 全局捕获自定义业务异常
+     */
+    @ExceptionHandler(CustomException.class)
+    public R<String> exceptionHandler(CustomException ex){
+        log.error(ex.getMessage());
+        return R.error(ex.getMessage());
+    }
 }
  

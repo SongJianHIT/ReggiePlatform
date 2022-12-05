@@ -1,93 +1,89 @@
-/**
- * @projectName reggie_take_out
- * @package tech.songjian.reggie.entity
- * @className tech.songjian.reggie.entity.Employee
- */
 package tech.songjian.reggie.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
-
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Employee
- * @description 员工实体类
- * @author SongJian
- * @date 2022/12/1 20:09
- * @version
+ 菜品
  */
 @Data
-public class Employee implements Serializable {
+public class Dish implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 用户id
+     * 菜品id
      */
     private Long id;
 
-    /**
-     * 登入用户名
-     */
-    private String username;
 
     /**
-     * 名字
+     * 菜品名称
      */
     private String name;
 
-    /**
-     * 登入密码
-     */
-    private String password;
 
     /**
-     * 电话号码
+     * 菜品分类id
      */
-    private String phone;
+    private Long categoryId;
+
 
     /**
-     * 性别
+     * 菜品价格
      */
-    private String sex;
+    private BigDecimal price;
+
 
     /**
-     * 身份证号
+     * 商品码
      */
-    private String idNumber;
+    private String code;
+
 
     /**
-     * 用户状态：
-     *      - 1：正常使用状态
-     *      - 0：账号被锁定
+     * 图片
+     */
+    private String image;
+
+
+    /**
+     * 描述信息
+     */
+    private String description;
+
+
+    /**
+     * 0 停售 1 起售
      */
     private Integer status;
 
+
     /**
-     * 创建时间
+     * 顺序
      */
+    private Integer sort;
+
+
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-    /**
-     * 修改时间
-     */
+
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
-    /**
-     * 创建者
-     */
+
     @TableField(fill = FieldFill.INSERT)
     private Long createUser;
 
-    /**
-     * 修改者
-     */
+
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Long updateUser;
+
 }
- 
