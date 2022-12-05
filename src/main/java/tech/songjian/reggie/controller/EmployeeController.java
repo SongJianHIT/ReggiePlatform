@@ -6,13 +6,11 @@
 package tech.songjian.reggie.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tech.songjian.reggie.common.R;
 import tech.songjian.reggie.entity.Employee;
 import tech.songjian.reggie.service.EmployeeService;
@@ -77,6 +75,15 @@ public class EmployeeController {
         return R.success(emp);
     }
 
+    /**
+     * @title logout
+     * @author SongJian
+     * @param: request
+     * @updateTime 2022/12/2 23:29
+     * @return: tech.songjian.reggie.common.R<java.lang.String>
+     * @throws
+     * @description 用户退出登入
+     */
     @PostMapping("/logout")
     public R<String> logout(HttpServletRequest request) {
 
@@ -116,6 +123,73 @@ public class EmployeeController {
 
         employeeService.save(employee);
         return R.success("新增员工成功");
+    }
+
+    /**
+     * @title page
+     * @author SongJian
+     * @param: page
+     * @param: pageSize
+     * @param: name
+     * @updateTime 2022/12/2 23:11
+     * @return: tech.songjian.reggie.common.R<com.baomidou.mybatisplus.extension.plugins.pagination.Page>
+     * @throws
+     * @description 分页查询员工，支持通过姓名模糊查询
+     */
+    @GetMapping("/page")
+    public R<Page> page(int page, int pageSize, String name) {
+        log.info("page={}, pageSize={}, name={}", page, pageSize, name);
+
+        // 1、构造分页构造器
+        Page pageInfo = new Page(page, pageSize);
+
+        // 2、条件构造器
+        LambdaQueryWrapper<Employee> lambdaQueryWrapper = new LambdaQueryWrapper();
+        // name 不为空，才会添加条件
+        lambdaQueryWrapper.like(name != null, Employee::getName, name);
+
+        // 3、添加排序条件
+        lambdaQueryWrapper.orderByDesc(Employee::getUpdateTime);
+
+        // 4、执行查询
+        employeeService.page(pageInfo, lambdaQueryWrapper);
+
+        return R.success(pageInfo);
+    }
+
+    /**
+     * @title update
+     * @author SongJian
+     * @param: employee
+     * @updateTime 2022/12/3 17:39
+     * @return: tech.songjian.reggie.common.R<java.lang.String>
+     * @throws
+     * @description 根据员工id修改员工信息
+     */
+    @PutMapping
+    public R<String> update(HttpServletRequest request, @RequestBody Employee employee) {
+        log.info(employee.toString());
+        // 更新日期和更新人
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser((Long) request.getSession().getAttribute("employee"));
+        employeeService.updateById(employee);
+        return R.success("员工信息修改成功");
+    }
+
+    /**
+     * @title getById
+     * @author SongJian
+     * @param: id
+     * @updateTime 2022/12/5 14:43
+     * @return: tech.songjian.reggie.common.R<tech.songjian.reggie.entity.Employee>
+     * @throws
+     * @description 根据id查询员工信息
+     */
+    @GetMapping("/{id}")
+    public R<Employee> getById(@PathVariable Long id) {
+        log.info("根据id查询员工信息...");
+        Employee employee = employeeService.getById(id);
+        return employee != null ? R.success(employee) : R.error("没有查询到对应员工信息");
     }
 }
  

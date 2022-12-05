@@ -125,6 +125,7 @@
           }
         },
         computed: {},
+        // 钩子函数：创建完就执行
         created() {
           this.init()
           this.user = JSON.parse(localStorage.getItem('userInfo')).username
@@ -133,11 +134,13 @@
         },
         methods: {
           async init () {
+            // 构造对象，参数
             const params = {
               page: this.page,
               pageSize: this.pageSize,
               name: this.input ? this.input : undefined
             }
+            // 调用getMemberList
             await getMemberList(params).then(res => {
               if (String(res.code) === '1') {
                 this.tableData = res.data.records || []
