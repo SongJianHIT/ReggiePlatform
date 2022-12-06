@@ -6,6 +6,7 @@
 package tech.songjian.reggie.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import tech.songjian.reggie.dto.DishDto;
 import tech.songjian.reggie.entity.Dish;
 
 /**
@@ -16,4 +17,14 @@ import tech.songjian.reggie.entity.Dish;
  * @version
  */
 public interface DishService extends IService<Dish> {
+
+    /**
+     * @title
+     * @author SongJian
+     * @updateTime 2022/12/6 16:28
+     * @throws
+     * @description 新增菜品，同时插入菜品对应的口味数据，需要操作两张表
+     */
+    public void saveWithFlavor(DishDto dishDto);
+
 }

@@ -15,6 +15,8 @@ import tech.songjian.reggie.common.R;
 import tech.songjian.reggie.entity.Category;
 import tech.songjian.reggie.service.CategoryService;
 
+import java.util.List;
+
 /**
  * CategoryController
  * @description 分类Controller
@@ -56,7 +58,6 @@ public class CategoryController {
      * @throws
      * @description 分页查询
      */
-
     @GetMapping("/page")
     public R<Page> page(int page, int pageSize) {
         // 分页构造器
@@ -105,5 +106,26 @@ public class CategoryController {
         return R.success("修改分类信息成功");
     }
 
+
+    /**
+     * @title list
+     * @author SongJian
+     * @param: category
+     * @updateTime 2022/12/6 16:03
+     * @return: tech.songjian.reggie.common.R<java.util.List<tech.songjian.reggie.entity.Category>>
+     * @throws
+     * @description 根据条件查询分类数据
+     */
+    @GetMapping("/list")
+    public R<List<Category>> list(Category category) {
+        // 条件构造器
+        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper();
+        // 添加条件
+        queryWrapper.eq(category.getType() != null, Category::getType, category.getType());
+        // 排序条件
+        queryWrapper.orderByAsc(Category::getSort).orderByDesc(Category::getUpdateTime);
+        List<Category> list = categoryService.list(queryWrapper);
+        return R.success(list);
+    }
 }
  
