@@ -110,6 +110,103 @@ public class DishController {
         return R.success(pageDtoInfo);
     }
 
+    /**
+     * @title get
+     * @author SongJian
+     * @param: id
+     * @updateTime 2022/12/6 19:25
+     * @return: tech.songjian.reggie.common.R<tech.songjian.reggie.dto.DishDto>
+     * @throws
+     * @description 查询菜品信息和对应的口味信息
+     */
+    @GetMapping("/{id}")
+    public R<DishDto> get(@PathVariable Long id) {
+        DishDto dishDto = dishService.getByIdWithFlavor(id);
+        return R.success(dishDto);
+    }
 
+    /**
+     * @title update
+     * @author SongJian
+     * @updateTime 2022/12/6 19:37
+     * @return: tech.songjian.reggie.common.R<java.lang.String>
+     * @throws
+     * @description 修改菜品
+     */
+    @PutMapping
+    public R<String> update(@RequestBody DishDto dishDto) {
+        dishService.updateWithFlavor(dishDto);
+        return R.success("修改菜品成功");
+    }
+
+    /**
+     * @title list
+     * @author SongJian
+     * @param: dish
+     * @updateTime 2022/12/7 14:46
+     * @return: tech.songjian.reggie.common.R<java.util.List<tech.songjian.reggie.entity.Dish>>
+     * @throws
+     * @description 根据条件查询菜品数据列表
+     */
+    @GetMapping("/list")
+    public R<List<Dish>> list(Dish dish) {
+        // 构造查询条件对象
+        LambdaQueryWrapper<Dish> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId());
+        // 添加排序条件
+        lambdaQueryWrapper.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
+        List<Dish> list = dishService.list(lambdaQueryWrapper);
+        return R.success(list);
+    }
+
+
+    /**
+     * @title update
+     * @author SongJian
+     * @param: ids
+     * @updateTime 2022/12/7 20:04
+     * @return: tech.songjian.reggie.common.R<java.lang.String>
+     * @throws
+     * @description 批量停售菜品
+     */
+    @PostMapping("/status/0")
+    public R<String> updateStop(@RequestParam List<Long> ids) {
+        log.info("正在修改：{}", ids);
+        dishService.updateStop(ids);
+        return R.success("菜品成功停售");
+    }
+
+    /**
+     * @title updateStart
+     * @author SongJian
+     * @param: ids
+     * @updateTime 2022/12/7 20:24
+     * @return: tech.songjian.reggie.common.R<java.lang.String>
+     * @throws
+     * @description 批量起售菜品
+     */
+    @PostMapping("/status/1")
+    public R<String> updateStart(@RequestParam List<Long> ids) {
+        log.info("正在修改：{}", ids);
+        dishService.updateStart(ids);
+        return R.success("菜品成功起售");
+    }
+
+
+    /**
+     * @title delete
+     * @author SongJian
+     * @param: ids
+     * @updateTime 2022/12/7 20:30
+     * @return: tech.songjian.reggie.common.R<java.lang.String>
+     * @throws
+     * @description 批量删除菜品
+     */
+    @DeleteMapping
+    public R<String> delete(@RequestParam List<Long> ids) {
+        log.info("正在删除：{}", ids);
+        dishService.removeWithFlavor(ids);
+        return R.success("删除菜品成功");
+    }
 }
  
