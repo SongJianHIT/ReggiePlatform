@@ -7,11 +7,13 @@ package tech.songjian.reggie.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.sun.org.apache.bcel.internal.generic.RETURN;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tech.songjian.reggie.common.R;
+import tech.songjian.reggie.dto.DishDto;
 import tech.songjian.reggie.dto.SetmealDto;
 import tech.songjian.reggie.entity.Category;
 import tech.songjian.reggie.entity.Dish;
@@ -118,5 +120,24 @@ public class SetmealController {
     }
 
 
+    /**
+     * @title list
+     * @author SongJian
+     * @updateTime 2022/12/8 17:11
+     * @return: tech.songjian.reggie.common.R<java.util.List<tech.songjian.reggie.dto.DishDto>>
+     * @throws
+     * @description 根据条件查询套餐数据
+     */
+    @GetMapping("/list")
+    public R<List<Setmeal>> list(Setmeal setmeal) {
+        LambdaQueryWrapper<Setmeal> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(setmeal.getCategoryId() != null, Setmeal::getCategoryId, setmeal.getCategoryId());
+        lambdaQueryWrapper.eq(setmeal.getStatus() != null, Setmeal::getStatus, setmeal.getStatus());
+        lambdaQueryWrapper.orderByDesc(Setmeal::getUpdateTime);
+
+        List<Setmeal> list = setmealService.list(lambdaQueryWrapper);
+
+        return R.success(list);
+    }
 }
  
