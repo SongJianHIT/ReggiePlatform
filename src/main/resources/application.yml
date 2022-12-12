@@ -12,7 +12,7 @@ spring:
       password: 12345678
   redis:
     host: 124.71.13.44
-    port: 6479
+    port: 6379
     password: weiwei1216
     database: 0
 mybatis-plus:
