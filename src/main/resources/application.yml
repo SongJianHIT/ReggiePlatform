@@ -55,4 +55,4 @@ mybatis-plus:
       id-type: ASSIGN_ID
 # 上传文件保存路径
 reggie:
-  path: /Users/mac/IdeaProjects/Reggie/img/
+  path: /usr/local/img/
